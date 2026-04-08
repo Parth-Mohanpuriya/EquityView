@@ -1,12 +1,10 @@
 
 const CONFIG = {
-    
-    API_KEY: '', 
+    API_KEY: 'd7b8q39r01qlbg01dn3gd7b8q39r01qlbg01dn40',
     TICKERS: ['AAPL', 'GOOGL', 'MSFT', 'TSLA', 'AMZN', 'NVDA', 'META', 'RELIANCE.NS', 'TCS.NS', 'HDFCBANK.NS', 'INFY.NS'],
     UPDATE_INTERVAL: 60000,
-    IS_DEMO: true,
-    CURRENT_FILTER: 'ALL', 
-    CURRENT_SORT: 'DEFAULT' 
+    CURRENT_FILTER: 'ALL',
+    CURRENT_SORT: 'DEFAULT'
 };
 
 const dom = {
@@ -14,11 +12,6 @@ const dom = {
     searchInput: document.getElementById('searchInput'),
     loader: document.getElementById('loader'),
     noResults: document.getElementById('noResults'),
-    apiStatus: document.getElementById('apiStatus'),
-    modal: document.getElementById('apiKeyModal'),
-    apiKeyInput: document.getElementById('apiKeyInput'),
-    saveKeyBtn: document.getElementById('saveKeyBtn'),
-    useDemoBtn: document.getElementById('useDemoBtn'),
     sortSelect: document.getElementById('sortSelect'),
     filterBtns: document.querySelectorAll('.filter-btn')
 };
@@ -35,8 +28,6 @@ const MOCK_STOCKS = [
 
 function setupEventListeners() {
     dom.searchInput.addEventListener('input', handleSearch);
-    dom.saveKeyBtn.addEventListener('click', saveApiKey);
-    dom.useDemoBtn.addEventListener('click', startDemo);
     dom.sortSelect.addEventListener('change', handleSort);
     dom.filterBtns.forEach(btn => {
         btn.addEventListener('click', () => handleFilter(btn));
@@ -52,57 +43,15 @@ function init() {
     const savedKey = localStorage.getItem('finnhub_api_key');
     if (savedKey) {
         CONFIG.API_KEY = savedKey;
-        CONFIG.IS_DEMO = false;
-        dom.modal.classList.add('hidden');
-        updateStatus(false);
-        fetchStockData();
-    } else {
-        dom.modal.classList.remove('hidden');
     }
+    fetchStockData();
 }
 
 
 document.addEventListener('DOMContentLoaded', init);
 
 
-function startDemo() {
-    CONFIG.IS_DEMO = true;
-    dom.modal.classList.add('hidden');
-    updateStatus(true);
-    stocksData = MOCK_STOCKS;
-    renderStocks(stocksData);
-}
-
-
-function saveApiKey() {
-    const key = dom.apiKeyInput.value.trim();
-    if (key) {
-        localStorage.setItem('finnhub_api_key', key);
-        CONFIG.API_KEY = key;
-        CONFIG.IS_DEMO = false;
-        dom.modal.classList.add('hidden');
-        updateStatus(false);
-        fetchStockData();
-    }
-}
-
-
-function updateStatus(isDemo) {
-    const dot = dom.apiStatus.querySelector('.status-dot');
-    const text = dom.apiStatus.querySelector('.status-text');
-    
-    if (isDemo) {
-        dot.className = 'status-dot yellow';
-        text.textContent = 'Demo Mode';
-    } else {
-        dot.className = 'status-dot green';
-        text.textContent = 'Live Mode';
-    }
-}
-
-
 async function fetchStockData() {
-    if (CONFIG.IS_DEMO) return;
 
     dom.loader.classList.remove('hidden');
     dom.stockGrid.innerHTML = '';
@@ -141,8 +90,9 @@ async function fetchStockData() {
         renderStocks();
     } catch (error) {
         console.error('Critical Fetch Error:', error);
-        alert(error.message || 'Failed to fetch live data.');
-        startDemo();
+        alert(error.message || 'Failed to fetch live data. Showing fallback values.');
+        stocksData = MOCK_STOCKS;
+        renderStocks();
     } finally {
         dom.loader.classList.add('hidden');
     }
@@ -253,7 +203,7 @@ function getCompanyName(symbol) {
 }
 
 setInterval(() => {
-    if (!CONFIG.IS_DEMO && CONFIG.API_KEY) {
+    if (CONFIG.API_KEY) {
         fetchStockData();
     }
 }, CONFIG.UPDATE_INTERVAL);

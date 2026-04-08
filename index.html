@@ -17,17 +17,15 @@
         <header>
             <div class="logo">
                 <span class="icon">📈</span>
-                <h1>EquityView</h1>
+                <div>
+                    <h1>EquityView</h1>
+                    <small>Stocks & vibes</small>
+                </div>
             </div>
             
             <div class="search-container">
                 <input type="text" id="searchInput" placeholder="Search by symbol (e.g., AAPL)..." autocomplete="off">
                 <span class="search-icon">🔍</span>
-            </div>
-
-            <div class="api-status" id="apiStatus">
-                <span class="status-dot green"></span>
-                <span class="status-text">Live Mode</span>
             </div>
         </header>
 
@@ -66,23 +64,9 @@
         </main>
 
         <footer>
-            <p>Data provided by Finnhub API. Demo mode active by default.</p>
+            <p>Data provided by Finnhub API.</p>
         </footer>
     </div>
-
-    <!-- API Key Modal (optional for better UX) -->
-    <div id="apiKeyModal" class="modal hidden">
-        <div class="modal-content">
-            <h2>Enter Finnhub API Key</h2>
-            <p>Get your free key at <a href="https://finnhub.io/" target="_blank">finnhub.io</a></p>
-            <input type="password" id="apiKeyInput" placeholder="Paste your API key here...">
-            <div class="modal-actions">
-                <button id="saveKeyBtn">Save & Start Live</button>
-                <button id="useDemoBtn" class="secondary">Use Demo Data</button>
-            </div>
-        </div>
-    </div>
-
     <script src="app.js"></script>
 </body>
 </html>
