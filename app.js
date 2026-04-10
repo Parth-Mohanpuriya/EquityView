@@ -135,7 +135,24 @@ function renderStocks() {
     dom.noResults.classList.add('hidden');
 
     processedData.forEach((stock, index) => {
-        const isPositive = stock.change >= 0;
+        let changeClass = 'neutral';
+        let arrow = '';
+        let sign = '';
+        
+        if (stock.change > 0) {
+            changeClass = 'positive';
+            arrow = '▲ ';
+            sign = '+';
+        } else if (stock.change < 0) {
+            changeClass = 'negative';
+            arrow = '▼ ';
+            sign = '';
+        } else {
+            changeClass = 'neutral';
+            arrow = '';
+            sign = '';
+        }
+
         const card = document.createElement('div');
         card.className = 'stock-card';
         card.style.animationDelay = `${index * 0.05}s`;
@@ -146,14 +163,14 @@ function renderStocks() {
                     <span class="symbol">${stock.symbol}</span>
                     <span class="company-name">${stock.name}</span>
                 </div>
-                <div class="change-badge ${isPositive ? 'positive' : 'negative'}">
-                    ${isPositive ? '▲' : '▼'} ${Math.abs(stock.percent).toFixed(2)}%
+                <div class="change-badge ${changeClass}">
+                    ${arrow}${Math.abs(stock.percent).toFixed(2)}%
                 </div>
             </div>
             <div class="price-section">
                 <div class="current-price">$${stock.price.toLocaleString(undefined, {minimumFractionDigits: 2})}</div>
-                <div class="change-text ${isPositive ? 'positive' : 'negative'}" style="font-size: 0.9rem; font-weight: 500;">
-                    ${isPositive ? '+' : ''}${stock.change.toFixed(2)} Today
+                <div class="change-text ${changeClass}" style="font-size: 0.9rem; font-weight: 500;">
+                    ${sign}${stock.change.toFixed(2)} Today
                 </div>
             </div>
         `;
